@@ -26,6 +26,10 @@ export class DeployPipeline extends Stack {
       `app-pipeline-${config.Enviroment}`,
       {
         synth: new CodeBuildStep(`Sync-${config.Enviroment}`, {
+          env: {
+            env: config.Enviroment,
+            GITHUB_TOKEN: process.env["GITHUB_TOKEN"],
+          },
           input: CodePipelineSource.gitHub(`humayunj/generic-cdk-app`, `main`, {
             authentication: SecretValue.unsafePlainText(
               process.env["GITHUB_TOKEN"]
