@@ -26,16 +26,12 @@ export class DeployPipeline extends Stack {
       `app-pipeline-${config.Enviroment}`,
       {
         synth: new CodeBuildStep(`Sync-${config.Enviroment}`, {
-          input: CodePipelineSource.gitHub(
-            `humayunj/generic-cdk-app`,
-            `preview`,
-            {
-              authentication: SecretValue.unsafePlainText(
-                process.env["GITHUB_TOKEN"]
-              ),
-              trigger: GitHubTrigger.WEBHOOK,
-            }
-          ),
+          input: CodePipelineSource.gitHub(`humayunj/generic-cdk-app`, `main`, {
+            authentication: SecretValue.unsafePlainText(
+              process.env["GITHUB_TOKEN"]
+            ),
+            trigger: GitHubTrigger.WEBHOOK,
+          }),
           installCommands: ["npm install -g aws-cdk"],
           commands: ["npm ci", "npm run build", "npx cdk synth"],
         }),
